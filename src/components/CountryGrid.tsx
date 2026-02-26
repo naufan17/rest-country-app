@@ -6,6 +6,7 @@ import { Search, Globe, Users, MapPin, Navigation, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useDebounce } from '@/hooks/use-debounce';
 
 interface Country {
   name: {
@@ -25,15 +26,16 @@ const ITEMS_PER_PAGE = 12;
 
 export default function CountryGrid({ countries }: { countries: Country[] }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const loaderRef = useRef<HTMLDivElement>(null);
 
   const filteredCountries = useMemo(() => {
     return countries.filter(c => 
-      c.name.common.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.region.toLowerCase().includes(searchTerm.toLowerCase())
+      c.name.common.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      c.region.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
     );
-  }, [countries, searchTerm]);
+  }, [countries, debouncedSearchTerm]);
 
   const countriesToShow = useMemo(() => {
     return filteredCountries.slice(0, visibleCount);

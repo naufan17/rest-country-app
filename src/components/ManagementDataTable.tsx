@@ -1,25 +1,31 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Country } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Search, Filter, ArrowUpDown, Database, ChevronDown, CheckCircle2, XCircle, Calendar, RefreshCcw, Coins } from 'lucide-react';
+import { useDebounce } from '@/hooks/use-debounce';
+import { Search, Filter, ArrowUpDown, Database, ChevronDown, Calendar, RefreshCcw } from 'lucide-react';
 
 interface ManagementDataTableProps {
   initialCountries: (Country & { currency?: string | null })[];
 }
 
-type SortField = 'name' | 'population' | 'cca3' | 'id' | 'independent' | 'createdAt' | 'updatedAt' | 'currency';
+type SortField = 'name' | 'population' | 'cca3' | 'id' | 'createdAt' | 'updatedAt' | 'currency';
 type SortOrder = 'asc' | 'desc';
 
 export default function ManagementDataTable({ initialCountries }: ManagementDataTableProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  
+  const [visibleCount, setVisibleCount] = useState(15);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const loaderRef = useRef<HTMLTableRowElement>(null);
 
   // Extract regions for filter
   const regions = useMemo(() => {
@@ -30,7 +36,7 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
   // Filtering and Sorting logic
   const filteredAndSortedCountries = useMemo(() => {
     const result = initialCountries.filter(country => {
-      const searchValue = searchTerm.toLowerCase();
+      const searchValue = debouncedSearchTerm.toLowerCase();
       const matchesSearch = 
         country.name.toLowerCase().includes(searchValue) ||
         country.cca3.toLowerCase().includes(searchValue) ||
@@ -54,7 +60,7 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
     });
 
     return result;
-  }, [initialCountries, searchTerm, selectedRegion, sortField, sortOrder]);
+  }, [initialCountries, debouncedSearchTerm, selectedRegion, sortField, sortOrder]);
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
@@ -63,7 +69,43 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
       setSortField(field);
       setSortOrder('asc');
     }
+    setVisibleCount(15);
   };
+
+  // Intersection Observer for infinite scrolling
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && !isLoadingMore && visibleCount < filteredAndSortedCountries.length) {
+          setIsLoadingMore(true);
+          // Simulate loading delay for skeleton (500ms)
+          setTimeout(() => {
+            setVisibleCount((prev) => prev + 15);
+            setIsLoadingMore(false);
+          }, 500);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '20px',
+        threshold: 1.0,
+      }
+    );
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [isLoadingMore, visibleCount, filteredAndSortedCountries.length]);
+
+  const displayedCountries = filteredAndSortedCountries.slice(0, visibleCount);
 
   return (
     <div className="space-y-6">
@@ -77,7 +119,10 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
               type="text" 
               placeholder="Search by name, code, or capital..." 
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setVisibleCount(15);
+              }}
               className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition-all w-full md:w-64"
             />
           </div>
@@ -87,7 +132,10 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
             <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
             <select
               value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
+              onChange={(e) => {
+                setSelectedRegion(e.target.value);
+                setVisibleCount(15);
+              }}
               className="pl-9 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 appearance-none transition-all cursor-pointer hover:bg-slate-50"
             >
               <option value="all">All Regions</option>
@@ -172,7 +220,7 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 animate-in fade-in duration-700">
-              {filteredAndSortedCountries.map((country) => (
+              {displayedCountries.map((country) => (
                 <tr key={country.id} className="hover:bg-slate-50/80 transition-all group">
                   <td className="px-6 py-4">
                     {country.flagUrl ? (
@@ -217,6 +265,27 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
                   </td>
                 </tr>
               ))}
+              
+              {isLoadingMore && (
+                Array.from({ length: 3 }).map((_, idx) => (
+                  <tr key={`skeleton-${idx}`} className="animate-pulse bg-slate-50/30">
+                    <td className="px-6 py-4"><div className="w-10 h-6 bg-slate-200 rounded-md"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-28 bg-slate-200 rounded"></div></td>
+                    <td className="px-6 py-4"><div className="h-5 w-12 bg-slate-200 rounded-lg"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-24 bg-slate-200 rounded"></div></td>
+                    <td className="px-6 py-4 text-right"><div className="h-4 w-16 bg-slate-200 rounded ml-auto"></div></td>
+                    <td className="px-6 py-4"><div className="h-5 w-16 bg-slate-200 rounded-full"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-24 bg-slate-200 rounded"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 w-20 bg-slate-200 rounded"></div></td>
+                  </tr>
+                ))
+              )}
+              
+              {visibleCount < filteredAndSortedCountries.length && !isLoadingMore && (
+                <tr ref={loaderRef} className="h-10">
+                  <td colSpan={8} className="text-center opacity-0 pointer-events-none">Loader Placeholder</td>
+                </tr>
+              )}
               {filteredAndSortedCountries.length === 0 && (
                 <tr>
                   <td colSpan={10} className="px-6 py-20 text-center text-slate-500 bg-slate-50/30">
@@ -226,7 +295,11 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
                       </div>
                       <p className="font-semibold text-slate-400">No matching records discovered.</p>
                       <button 
-                        onClick={() => {setSearchTerm(''); setSelectedRegion('all');}}
+                        onClick={() => {
+                          setSearchTerm('');
+                          setSelectedRegion('all');
+                          setVisibleCount(15);
+                        }}
                         className="text-indigo-600 font-bold text-xs hover:underline mt-2"
                       >
                         Reset filters

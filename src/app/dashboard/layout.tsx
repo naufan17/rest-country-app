@@ -42,29 +42,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Navigation Sub-header */}
       <div className="bg-white border-b border-slate-200 sticky top-18 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="flex items-center -mb-px">
-                {navItems.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "flex items-center gap-2 py-4 px-6 text-sm font-medium border-b-2 transition-all duration-300 relative",
-                                isActive 
-                                    ? "border-indigo-600 text-indigo-600" 
-                                    : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
-                            )}
-                        >
-                            <item.icon className={cn("w-4 h-4", isActive ? "text-indigo-600" : "text-slate-400")} />
-                            {item.label}
-                            {isActive && (
-                                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-in fade-in zoom-in duration-300" />
-                            )}
-                        </Link>
-                    );
-                })}
-            </nav>
+          <nav className="flex items-center -mb-px">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-2 py-4 px-6 text-sm font-medium border-b-2 transition-all duration-300 relative",
+                    isActive 
+                      ? "border-indigo-600 text-indigo-600" 
+                      : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+                  )}
+                >
+                  <item.icon className={cn("w-4 h-4", isActive ? "text-indigo-600" : "text-slate-400")} />
+                  {item.label}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-in fade-in zoom-in duration-300" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </div>
 
