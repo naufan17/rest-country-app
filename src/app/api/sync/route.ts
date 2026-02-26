@@ -41,6 +41,13 @@ export async function POST() {
       )
     );
 
+    // Create a sync log entry
+    await prisma.syncLog.create({
+      data: {
+        count: countries.length,
+      }
+    });
+
     return NextResponse.json({ message: 'Synced successfully', count: countries.length });
   } catch (error: any) {
     console.error('Sync Error:', error);

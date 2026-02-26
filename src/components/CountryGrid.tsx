@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Search, Globe, Users, MapPin, Navigation } from 'lucide-react';
-
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
