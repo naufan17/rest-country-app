@@ -16,7 +16,7 @@ export async function POST() {
     if (!res.ok) throw new Error('Failed to fetch from external API');
     
     const countries: CountryApiData[] = await res.json();
-
+        
     // Perform upserts in a transaction for better performance in SQLite
     await prisma.$transaction(
       countries.map((c) => 

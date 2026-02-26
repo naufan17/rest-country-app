@@ -20,6 +20,8 @@ export const prisma =
   })
 
 if (process.env.NODE_ENV !== 'production') {
+  // Clear the singleton to ensure new schema changes are picked up on reload
+  globalForPrisma.prisma = undefined
   globalForPrisma.prisma = prisma
   globalForPrisma.pool = pool
 }

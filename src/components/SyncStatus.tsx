@@ -42,7 +42,7 @@ export default function SyncStatus({ lastSyncAt }: SyncStatusProps) {
       <Button
         onClick={handleSync}
         disabled={loading}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all active:scale-95 w-full sm:w-auto"
+        className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all active:scale-95 w-full sm:w-auto cursor-pointer"
       >
         <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
         {loading ? 'Syncing...' : 'Sync Now'}

@@ -94,9 +94,9 @@ function StatCard({ title, value, icon: Icon, description, trend, color }: StatC
           <Icon className="w-5 h-5" />
         </div>
         {trend && (
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
-                {trend}
-            </span>
+          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+            {trend}
+          </span>
         )}
       </div>
       <div>

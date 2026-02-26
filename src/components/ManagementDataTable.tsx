@@ -2,16 +2,17 @@
 
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
+import { format } from 'date-fns';
 import { Country } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, ArrowUpDown, Database, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Search, Filter, ArrowUpDown, Database, ChevronDown, CheckCircle2, XCircle, Calendar, RefreshCcw, Coins } from 'lucide-react';
 
 interface ManagementDataTableProps {
-  initialCountries: Country[];
+  initialCountries: (Country & { currency?: string | null })[];
 }
 
-type SortField = 'name' | 'population' | 'cca3' | 'id';
+type SortField = 'name' | 'population' | 'cca3' | 'id' | 'independent' | 'createdAt' | 'updatedAt' | 'currency';
 type SortOrder = 'asc' | 'desc';
 
 export default function ManagementDataTable({ initialCountries }: ManagementDataTableProps) {
@@ -44,8 +45,8 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
       let valA: any = a[sortField];
       let valB: any = b[sortField];
 
-      if (valA === null) valA = '';
-      if (valB === null) valB = '';
+      if (valA === null || valA === undefined) valA = '';
+      if (valB === null || valB === undefined) valB = '';
 
       if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
       if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
@@ -99,9 +100,9 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
         </div>
 
         <div className="flex items-center gap-2">
-            <span className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100 font-bold">
-                {filteredAndSortedCountries.length} Records found
-            </span>
+          <span className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100 font-bold">
+            {filteredAndSortedCountries.length} Records found
+          </span>
         </div>
       </div>
 
@@ -140,7 +141,6 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
                   </div>
                 </th>
                 <th className="px-6 py-4 font-semibold text-slate-500 text-[10px]">Capital</th>
-                <th className="px-6 py-4 font-semibold text-slate-500 text-[10px]">Region</th>
                 <th 
                   className="px-6 py-4 font-semibold text-slate-500 text-[10px] text-right cursor-pointer hover:text-indigo-600 transition-colors"
                   onClick={() => toggleSort('population')}
@@ -148,6 +148,25 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
                   <div className="flex items-center justify-end gap-1.5">
                     Population
                     <ArrowUpDown className={cn("w-3 h-3", sortField === 'population' ? "text-indigo-600" : "text-slate-300")} />
+                  </div>
+                </th>
+                <th className="px-6 py-4 font-semibold text-slate-500 text-[10px]">Region</th>
+                <th 
+                  className="px-6 py-4 font-semibold text-slate-500 text-[10px] cursor-pointer hover:text-indigo-600 transition-colors"
+                  onClick={() => toggleSort('createdAt')}
+                >
+                  <div className="flex items-center gap-1.5">
+                    Created
+                    <ArrowUpDown className={cn("w-3 h-3", sortField === 'createdAt' ? "text-indigo-600" : "text-slate-300")} />
+                  </div>
+                </th>
+                <th 
+                  className="px-6 py-4 font-semibold text-slate-500 text-[10px] cursor-pointer hover:text-indigo-600 transition-colors"
+                  onClick={() => toggleSort('updatedAt')}
+                >
+                  <div className="flex items-center gap-1.5">
+                    Taken
+                    <ArrowUpDown className={cn("w-3 h-3", sortField === 'updatedAt' ? "text-indigo-600" : "text-slate-300")} />
                   </div>
                 </th>
               </tr>
@@ -176,30 +195,42 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
                     </code>
                   </td>
                   <td className="px-6 py-4 text-slate-600">{country.capital || '-'}</td>
+                  <td className="px-6 py-4 text-right text-slate-600 font-bold tracking-tight">
+                    {country.population?.toLocaleString() || '0'}
+                  </td>
                   <td className="px-6 py-4">
                     <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-100 font-bold px-2.5 py-0.5 rounded-full text-[10px] uppercase shadow-inner">
                       {country.region || 'Unknown'}
                     </Badge>
+                  </td>                 
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-slate-600 font-medium whitespace-nowrap">
+                      <Calendar className="w-3.5 h-3.5 text-indigo-400" />
+                      {format(new Date(country.createdAt), 'MMM d, yyyy')}
+                    </div>
                   </td>
-                  <td className="px-6 py-4 text-right text-slate-600 font-bold tracking-tight">
-                    {country.population?.toLocaleString() || '0'}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-slate-600 font-medium whitespace-nowrap">
+                      <RefreshCcw className="w-3.5 h-3.5 text-amber-400" />
+                      {format(new Date(country.updatedAt), 'HH:mm:ss')}
+                    </div>
                   </td>
                 </tr>
               ))}
               {filteredAndSortedCountries.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center text-slate-500 bg-slate-50/30">
+                  <td colSpan={10} className="px-6 py-20 text-center text-slate-500 bg-slate-50/30">
                     <div className="flex flex-col items-center gap-2">
-                        <div className="p-4 bg-white rounded-full border border-slate-200 shadow-sm animate-pulse">
-                            <Database className="w-8 h-8 text-slate-300" />
-                        </div>
-                        <p className="font-semibold text-slate-400">No matching records discovered.</p>
-                        <button 
-                            onClick={() => {setSearchTerm(''); setSelectedRegion('all');}}
-                            className="text-indigo-600 font-bold text-xs hover:underline mt-2"
-                        >
-                            Reset filters
-                        </button>
+                      <div className="p-4 bg-white rounded-full border border-slate-200 shadow-sm animate-pulse">
+                        <Database className="w-8 h-8 text-slate-300" />
+                      </div>
+                      <p className="font-semibold text-slate-400">No matching records discovered.</p>
+                      <button 
+                        onClick={() => {setSearchTerm(''); setSelectedRegion('all');}}
+                        className="text-indigo-600 font-bold text-xs hover:underline mt-2"
+                      >
+                        Reset filters
+                      </button>
                     </div>
                   </td>
                 </tr>

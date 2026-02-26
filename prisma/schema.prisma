@@ -7,15 +7,17 @@ datasource db {
 }
 
 model Country {
-  id         Int      @id @default(autoincrement())
-  cca3       String   @unique
-  name       String
-  capital    String?
-  region     String?
-  flagUrl    String?
-  population Int?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  cca3        String   @unique
+  name        String
+  capital     String?
+  region      String?
+  flagUrl     String?
+  population  Int?
+  
+  // Internal Metadata
+  createdAt   DateTime @default(now())   // Represents "Created"
+  updatedAt   DateTime @updatedAt       // Represents "Taken" (Last Synced)
 }
 
 model SyncLog {
