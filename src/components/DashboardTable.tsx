@@ -12,20 +12,21 @@ interface DashboardTableProps {
 export default function DashboardTable({ countries }: DashboardTableProps) {
   const [visibleCount, setVisibleCount] = useState(15);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [prevCountries, setPrevCountries] = useState(countries);
   const loaderRef = useRef<HTMLTableRowElement>(null);
 
-  useEffect(() => {
+  if (countries !== prevCountries) {
+    setPrevCountries(countries);
     setVisibleCount(15);
-  }, [countries]);
+  }
 
-  // Intersection Observer for infinite scrolling
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const target = entries[0];
         if (target.isIntersecting && !isLoadingMore && visibleCount < countries.length) {
           setIsLoadingMore(true);
-          // Simulate loading delay for skeleton (500ms)
+
           setTimeout(() => {
             setVisibleCount((prev) => prev + 15);
             setIsLoadingMore(false);

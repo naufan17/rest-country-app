@@ -1,7 +1,7 @@
 import React from 'react';
 import AnalyticsCharts from '@/components/AnalyticsCharts';
 import { Country } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
+import { getCountries } from '@/lib/api';
 import { TrendingUp, Users, Globe, Map } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -15,7 +15,7 @@ interface StatCardProps {
 }
 
 export default async function AnalyticsPage() {
-  const countries: Country[] = await prisma.country.findMany();
+  const countries: Country[] = await getCountries();
 
   // Prepare data for Region Distribution Chart
   const regions: string[] = [...new Set(countries.map((c: Country) => c.region || 'Unknown'))];

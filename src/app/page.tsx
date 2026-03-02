@@ -1,12 +1,10 @@
 import Link from 'next/link';
 import { LayoutDashboard, Globe } from 'lucide-react';
-import { prisma } from '@/lib/prisma';
+import { getCountries } from '@/lib/api';
 import CountryGrid from '@/components/CountryGrid';
 
 export default async function Home() {
-  const dbCountries = await prisma.country.findMany({
-    orderBy: { name: 'asc' }
-  });
+  const dbCountries = await getCountries();
 
   const countries = dbCountries.map((c: { name: string; capital: string | null; region: string | null; flagUrl: string | null; population: number | null }) => ({
     name: { common: c.name, official: c.name },
@@ -37,15 +35,14 @@ export default async function Home() {
       </header>
 
       <div className="py-8">
-
-      {countries.length > 0 ? (
-        <CountryGrid countries={countries} />
-      ) : (
-        <div className="max-w-6xl mx-auto py-20 px-4 text-center">
-          <h2 className="text-2xl font-bold text-slate-800 mb-4">No Data Found</h2>
-          <p className="text-slate-500 mb-8">Click the sync button above to fetch country data from the API and save it to the database.</p>
-        </div>
-      )}
+        {countries.length > 0 
+        ?  <CountryGrid countries={countries} />
+        : (
+          <div className="max-w-6xl mx-auto py-20 px-4 text-center">
+            <h2 className="text-2xl font-bold text-slate-800 mb-4">No Data Found</h2>
+            <p className="text-slate-500 mb-8">Click the sync button above to fetch country data from the API and save it to the database.</p>
+          </div>
+        )}
       </div>
     </main>
   );

@@ -26,8 +26,9 @@ const ITEMS_PER_PAGE = 12;
 
 export default function CountryGrid({ countries }: { countries: Country[] }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const loaderRef = useRef<HTMLDivElement>(null);
 
   const filteredCountries = useMemo(() => {
@@ -43,10 +44,9 @@ export default function CountryGrid({ countries }: { countries: Country[] }) {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setVisibleCount(ITEMS_PER_PAGE); // Reset count immediately on search
+    setVisibleCount(ITEMS_PER_PAGE);
   };
 
-  // Intersection Observer for Infinite Scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {

@@ -1,15 +1,12 @@
-import { prisma } from '@/lib/prisma';
+import { getCountries, getLastSyncLog } from '@/lib/api';
 import SyncStatus from '@/components/SyncStatus';
 import ManagementDataTable from '@/components/ManagementDataTable';
 
 export default async function ManagementPage() {
-  const countries = await prisma.country.findMany({
-    orderBy: { name: 'asc' }
-  });
-
-  const lastSync = await prisma.syncLog.findFirst({
-    orderBy: { syncedAt: 'desc' }
-  });
+  const [countries, lastSync] = await Promise.all([
+    getCountries({ orderBy: 'name' }),
+    getLastSyncLog(),
+  ]);
 
   return (
     <div className="space-y-8">

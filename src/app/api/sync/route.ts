@@ -17,7 +17,6 @@ export async function POST() {
     
     const countries: CountryApiData[] = await res.json();
         
-    // Perform upserts in a transaction for better performance in SQLite
     await prisma.$transaction(
       countries.map((c) => 
         prisma.country.upsert({
@@ -28,7 +27,7 @@ export async function POST() {
             region: c.region,
             flagUrl: c.flags.png,
             population: c.population,
-          },
+          }, 
           create: {
             cca3: c.cca3,
             name: c.name.common,
@@ -49,8 +48,12 @@ export async function POST() {
     });
 
     return NextResponse.json({ message: 'Synced successfully', count: countries.length });
-  } catch (error: any) {
-    console.error('Sync Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Sync Error:', error.message);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    console.error('Unknown Sync Error:', error);
+    return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
   }
 }
