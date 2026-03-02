@@ -5,7 +5,7 @@ import { RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
-export default function SyncButton() {
+const SyncButton = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -17,7 +17,7 @@ export default function SyncButton() {
       
       const data = await res.json();
       alert(`Successfully synced ${data.count} countries!`);
-      router.refresh(); // Refresh the page to see new data
+      router.refresh();
     } catch (err) {
       console.error(err);
       alert('Failed to sync countries. Check console for details.');
@@ -37,3 +37,5 @@ export default function SyncButton() {
     </Button>
   );
 }
+
+export default SyncButton;

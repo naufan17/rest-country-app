@@ -3,10 +3,16 @@ import { LayoutDashboard, Globe } from 'lucide-react';
 import { getCountries } from '@/lib/api';
 import CountryGrid from '@/components/CountryGrid';
 
-export default async function Home() {
+const Home = async () => {
   const dbCountries = await getCountries();
 
-  const countries = dbCountries.map((c: { name: string; capital: string | null; region: string | null; flagUrl: string | null; population: number | null }) => ({
+  const countries = dbCountries.map((c: { 
+    name: string; 
+    capital: string | null; 
+    region: string | null; 
+    flagUrl: string | null; 
+    population: number | null 
+  }) => ({
     name: { common: c.name, official: c.name },
     capital: c.capital ? [c.capital] : [],
     region: c.region || '',
@@ -46,4 +52,6 @@ export default async function Home() {
       </div>
     </main>
   );
-}
+};
+
+export default Home;

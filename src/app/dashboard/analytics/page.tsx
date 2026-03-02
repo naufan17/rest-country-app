@@ -1,8 +1,9 @@
 import React from 'react';
-import AnalyticsCharts from '@/components/AnalyticsCharts';
-import { Country } from '@prisma/client';
-import { getCountries } from '@/lib/api';
 import { TrendingUp, Users, Globe, Map } from 'lucide-react';
+import { Country } from '@prisma/client';
+
+import AnalyticsCharts from '@/components/AnalyticsCharts';
+import { getCountries } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 interface StatCardProps {
@@ -14,17 +15,15 @@ interface StatCardProps {
   color: 'indigo' | 'emerald' | 'amber' | 'purple';
 }
 
-export default async function AnalyticsPage() {
+const AnalyticsPage = async () => {
   const countries: Country[] = await getCountries();
 
-  // Prepare data for Region Distribution Chart
   const regions: string[] = [...new Set(countries.map((c: Country) => c.region || 'Unknown'))];
   const regionData = regions.map((region: string) => ({
     name: region,
     value: countries.filter((c: Country) => (c.region || 'Unknown') === region).length
   })).sort((a, b) => b.value - a.value);
 
-  // Prepare data for Top 10 Population Chart
   const populationData = countries
     .sort((a: Country, b: Country) => (b.population || 0) - (a.population || 0))
     .slice(0, 10)
@@ -73,13 +72,14 @@ export default async function AnalyticsPage() {
           color="purple" 
         />
       </div>
-
       <AnalyticsCharts regionData={regionData} populationData={populationData} />
     </div>
   );
-}
+};
 
-function StatCard({ title, value, icon: Icon, description, trend, color }: StatCardProps) {
+export default AnalyticsPage;
+
+const StatCard = ({ title, value, icon: Icon, description, trend, color }: StatCardProps) => {
   const colors: Record<string, string> = {
     indigo: 'bg-indigo-50 text-indigo-600 border-indigo-100',
     emerald: 'bg-emerald-50 text-emerald-600 border-emerald-100',

@@ -35,7 +35,7 @@ interface CountryFormDialogsProps {
   onDeleted: (id: number) => void;
 }
 
-function ErrorBanner({ message }: { message: string }) {
+const ErrorBanner = ({ message }: { message: string }) => {
   if (!message) return null;
   return (
     <p className="mt-4 text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2 flex items-center gap-2">
@@ -45,7 +45,7 @@ function ErrorBanner({ message }: { message: string }) {
   );
 }
 
-function CountryFormInner({
+const CountryFormInner = ({
   data,
   isEdit,
   onSuccess,
@@ -59,7 +59,7 @@ function CountryFormInner({
   onClose: () => void;
   submitLabel: string;
   SubmitIcon: React.ElementType;
-}) {
+}) => {
   const router = useRouter();
   const [formError, setFormError] = useState('');
 
@@ -183,7 +183,7 @@ function CountryFormInner({
   );
 }
 
-export default function CountryFormDialogs({
+const CountryFormDialogs = ({
   createOpen,
   onCreateClose,
   editTarget,
@@ -193,7 +193,7 @@ export default function CountryFormDialogs({
   onCreated,
   onUpdated,
   onDeleted,
-}: CountryFormDialogsProps) {
+}: CountryFormDialogsProps) => {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
@@ -292,4 +292,6 @@ export default function CountryFormDialogs({
       </Dialog>
     </>
   );
-}
+};
+
+export default CountryFormDialogs;

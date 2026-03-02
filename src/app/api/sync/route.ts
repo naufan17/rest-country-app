@@ -10,7 +10,7 @@ interface CountryApiData {
   population: number;
 }
 
-export async function POST() {
+export const POST = async () => {
   try {
     const res = await fetch('https://restcountries.com/v3.1/all?fields=name,capital,region,flags,population,cca3');
     if (!res.ok) throw new Error('Failed to fetch from external API');
@@ -40,7 +40,6 @@ export async function POST() {
       )
     );
 
-    // Create a sync log entry
     await prisma.syncLog.create({
       data: {
         count: countries.length,

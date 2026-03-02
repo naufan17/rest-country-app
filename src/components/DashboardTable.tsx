@@ -9,7 +9,7 @@ interface DashboardTableProps {
   countries: Country[];
 }
 
-export default function DashboardTable({ countries }: DashboardTableProps) {
+const DashboardTable = ({ countries }: DashboardTableProps) => {
   const [visibleCount, setVisibleCount] = useState(15);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [prevCountries, setPrevCountries] = useState(countries);
@@ -130,4 +130,6 @@ export default function DashboardTable({ countries }: DashboardTableProps) {
       </table>
     </div>
   );
-}
+};
+
+export default DashboardTable;

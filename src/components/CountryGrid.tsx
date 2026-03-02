@@ -24,7 +24,7 @@ interface Country {
 
 const ITEMS_PER_PAGE = 12;
 
-export default function CountryGrid({ countries }: { countries: Country[] }) {
+const CountryGrid = ({ countries }: { countries: Country[] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
@@ -101,7 +101,6 @@ export default function CountryGrid({ countries }: { countries: Country[] }) {
             className="group relative bg-white rounded-[2rem] overflow-hidden border-none shadow-2xl shadow-slate-200/40 hover:shadow-indigo-200/40 transition-all flex flex-col hover:-translate-y-3 animate-in fade-in zoom-in slide-in-from-bottom-5 duration-700 fill-mode-both"
             style={{ animationDelay: `${(index % ITEMS_PER_PAGE) * 100}ms` }}
           >
-            {/* Flag Header */}
             <div className="h-56 relative overflow-hidden">
               <Image 
                 src={country.flags.png} 
@@ -169,7 +168,6 @@ export default function CountryGrid({ countries }: { countries: Country[] }) {
         ))}
       </div>
 
-      {/* Infinite Scroll Loader */}
       {visibleCount < filteredCountries.length && (
         <div ref={loaderRef} className="flex justify-center py-12">
           <div className="flex flex-col items-center gap-3">
@@ -189,5 +187,7 @@ export default function CountryGrid({ countries }: { countries: Country[] }) {
       )}
     </div>
   );
-}
+};
+
+export default CountryGrid;
 

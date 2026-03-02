@@ -38,7 +38,7 @@ const sizeMap: Record<NonNullable<DialogProps['size']>, string> = {
   '2xl': 'max-w-2xl',
 };
 
-export function DialogHeader({ title, description, onClose, className }: DialogHeaderProps) {
+export const DialogHeader = ({ title, description, onClose, className }: DialogHeaderProps) => {
   return (
     <div className={cn('flex items-start justify-between px-6 py-4 border-b border-slate-100', className)}>
       <div>
@@ -60,7 +60,7 @@ export function DialogHeader({ title, description, onClose, className }: DialogH
   );
 }
 
-export function DialogBody({ children, className }: DialogBodyProps) {
+export const DialogBody = ({ children, className }: DialogBodyProps) => {
   return (
     <div className={cn('px-6 py-5 overflow-y-auto max-h-[60vh]', className)}>
       {children}
@@ -68,7 +68,7 @@ export function DialogBody({ children, className }: DialogBodyProps) {
   );
 }
 
-export function DialogFooter({ children, className }: DialogFooterProps) {
+export const DialogFooter = ({ children, className }: DialogFooterProps) => {
   return (
     <div className={cn('flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl', className)}>
       {children}
@@ -76,14 +76,14 @@ export function DialogFooter({ children, className }: DialogFooterProps) {
   );
 }
 
-export function Dialog({
+export const Dialog = ({
   open,
   onClose,
   children,
   size = 'md',
   className,
   closeOnBackdrop = true,
-}: DialogProps) {
+}: DialogProps) => {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); },
     [onClose]

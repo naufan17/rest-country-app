@@ -2,7 +2,7 @@ import { getCountries, getLastSyncLog } from '@/lib/api';
 import SyncStatus from '@/components/SyncStatus';
 import ManagementDataTable from '@/components/ManagementDataTable';
 
-export default async function ManagementPage() {
+const ManagementPage = async () => {
   const [countries, lastSync] = await Promise.all([
     getCountries({ orderBy: 'name' }),
     getLastSyncLog(),
@@ -23,4 +23,6 @@ export default async function ManagementPage() {
       <ManagementDataTable initialCountries={countries} />
     </div>
   );
-}
+};
+
+export default ManagementPage;

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
     const orderBy = (searchParams.get('orderBy') ?? 'name') as 'name' | 'population' | 'createdAt';
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     const { cca3, name, capital, region, flagUrl, population } = body;

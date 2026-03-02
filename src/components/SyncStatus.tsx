@@ -10,7 +10,7 @@ interface SyncStatusProps {
   lastSyncAt: Date | null;
 }
 
-export default function SyncStatus({ lastSyncAt }: SyncStatusProps) {
+const SyncStatus = ({ lastSyncAt }: SyncStatusProps) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -49,4 +49,6 @@ export default function SyncStatus({ lastSyncAt }: SyncStatusProps) {
       </Button>
     </div>
   );
-}
+};
+
+export default SyncStatus;

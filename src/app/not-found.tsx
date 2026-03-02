@@ -1,18 +1,15 @@
 import Link from 'next/link';
 import { Compass, Home, Map } from 'lucide-react';
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <div className="min-h-dvh bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Background decorations */}
       <div className="absolute top-1/2 left-1/2 w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-400/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
         <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-400/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
         <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-blue-400/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
       </div>
-
       <div className="max-w-2xl w-full flex flex-col items-center text-center relative z-10">
-        {/* Animated Object */}
         <div className="relative mb-8 group cursor-pointer">
           <div className="absolute -inset-4 bg-indigo-100/50 rounded-full animate-pulse transition-all group-hover:scale-110" />
           <div className="bg-white p-5 rounded-full shadow-2xl shadow-indigo-500/20 border border-indigo-50 relative z-10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-105">
@@ -24,19 +21,15 @@ export default function NotFound() {
             </div>
           </div>
         </div>
-
         <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-linear-to-br from-indigo-600 via-violet-600 to-indigo-800 mb-4 drop-shadow-sm tracking-tighter">
           404
-        </h1>
-        
+        </h1>        
         <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-4 tracking-tight">
           Looks like you&apos;re off the map!
         </h2>
-        
         <p className="text-base md:text-lg text-slate-500 max-w-xl mb-8 leading-relaxed">
           The territory you&apos;re looking for remains uncharted. Let&apos;s get you back to familiar lands before you get completely lost.
         </p>
-
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full sm:w-auto px-4">
           <Link
             href="/"
@@ -56,4 +49,6 @@ export default function NotFound() {
       </div>
     </div>
   );
-}
+};
+
+export default NotFound;

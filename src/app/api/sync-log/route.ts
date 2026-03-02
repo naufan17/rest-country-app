@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET() {
+export const GET = async () => {
   try {
     const lastSync = await prisma.syncLog.findFirst({
       orderBy: { syncedAt: 'desc' },

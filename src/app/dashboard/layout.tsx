@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Database, BarChart3, ArrowLeft, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   const navItems = [
@@ -19,15 +19,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <header className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
           <div className="flex items-center gap-4">
-             <Link href="/" className="hover:opacity-80 transition-all flex items-center gap-2">
-                <div className="bg-indigo-600 p-1.5 rounded-lg shadow-sm">
-                  <Globe className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                    <h1 className="text-xl font-bold text-slate-900 leading-tight">Admin Console</h1>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">RestCountries Project</p>
-                </div>
-             </Link>
+            <Link href="/" className="hover:opacity-80 transition-all flex items-center gap-2">
+              <div className="bg-indigo-600 p-1.5 rounded-lg shadow-sm">
+                <Globe className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900 leading-tight">Admin Console</h1>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">RestCountries Project</p>
+              </div>
+            </Link>
           </div>
           <Link 
             href="/" 
@@ -73,4 +73,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </main>
     </div>
   );
-}
+};
+
+export default DashboardLayout;

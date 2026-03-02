@@ -17,7 +17,7 @@ interface ManagementDataTableProps {
 type SortField = 'name' | 'population' | 'cca3' | 'id' | 'createdAt' | 'updatedAt' | 'currency';
 type SortOrder = 'asc' | 'desc';
 
-export default function ManagementDataTable({ initialCountries }: ManagementDataTableProps) {
+const ManagementDataTable = ({ initialCountries }: ManagementDataTableProps) => {
   const [countries, setCountries] = useState(initialCountries);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -313,4 +313,6 @@ export default function ManagementDataTable({ initialCountries }: ManagementData
       />
     </>
   );
-}
+};
+
+export default ManagementDataTable;

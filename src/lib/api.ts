@@ -1,6 +1,6 @@
 import { Country, SyncLog } from '@prisma/client';
 
-function baseUrl() {
+const baseUrl = () => {
   if (process.env.NEXT_PUBLIC_BASE_URL) {
     return process.env.NEXT_PUBLIC_BASE_URL.replace(/\/$/, '');
   }
@@ -12,8 +12,7 @@ export interface GetCountriesOptions {
   region?: string;
 }
 
-
-export async function getCountries(options: GetCountriesOptions = {}): Promise<Country[]> {
+export const getCountries = async (options: GetCountriesOptions = {}): Promise<Country[]> => {
   const { orderBy = 'name', region } = options;
 
   const url = new URL(`${baseUrl()}/api/countries`);
@@ -30,9 +29,9 @@ export async function getCountries(options: GetCountriesOptions = {}): Promise<C
   }
 
   return res.json();
-}
+};
 
-export async function getLastSyncLog(): Promise<SyncLog | null> {
+export const getLastSyncLog = async (): Promise<SyncLog | null> => {
   const res = await fetch(`${baseUrl()}/api/sync-log`, {
     cache: 'no-store',
   });
@@ -43,4 +42,4 @@ export async function getLastSyncLog(): Promise<SyncLog | null> {
   }
 
   return res.json();
-}
+};

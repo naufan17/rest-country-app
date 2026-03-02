@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 
 type Params = { params: Promise<{ id: string }> };
 
-export async function PUT(request: Request, { params }: Params) {
+export const PUT = async (request: Request, { params }: Params) => {
   try {
     const { id } = await params;
     const body = await request.json();
@@ -27,7 +27,7 @@ export async function PUT(request: Request, { params }: Params) {
   }
 }
 
-export async function DELETE(_request: Request, { params }: Params) {
+export const DELETE = async (_request: Request, { params }: Params) => {
   try {
     const { id } = await params;
     await prisma.country.delete({ where: { id: Number(id) } });
