@@ -11,7 +11,7 @@ interface CountryApiData {
 }
 
 export const POST = async () => {
-  const CHUNK_SIZE = 50;
+  const CHUNK_SIZE = 25;
 
   try {
     const res = await fetch('https://restcountries.com/v3.1/all?fields=name,capital,region,flags,population,cca3');
