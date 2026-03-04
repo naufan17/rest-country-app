@@ -104,6 +104,7 @@ const ManagementDataTable = ({ initialCountries }: ManagementDataTableProps) => 
   const openDelete = (country: Country) => {
     setDeleteTarget(country);
   };
+  
   const handleCreated = (created: Country) => {
     setCountries((prev) => [created, ...prev].sort((a, b) => a.name.localeCompare(b.name)));
   };

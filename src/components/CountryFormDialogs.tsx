@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import { Dialog, DialogHeader, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { toast } from 'sonner';
+
 const countrySchema = z.object({
   cca3: z.string().min(1, 'CCA3 is required').max(3, 'Max 3 chars').toUpperCase(),
   name: z.string().min(1, 'Name is required'),
@@ -111,10 +113,12 @@ const CountryFormInner = ({
       }
       
       const savedCountry: Country = await res.json();
+      toast.success(isEdit ? 'Country updated successfully' : 'Country created successfully');
       onSuccess(savedCountry);
       onClose();
       router.refresh();
     } catch {
+      toast.error('Network error. Please try again.');
       setFormError('Network error. Please try again.');
     }
   };
@@ -210,9 +214,11 @@ const CountryFormDialogs = ({
         return;
       }
       onDeleted(deleteTarget.id);
+      toast.success('Country deleted successfully');
       onDeleteClose();
       router.refresh();
     } catch {
+      toast.error('Network error. Please try again.');
       setDeleteError('Network error. Please try again.');
     } finally {
       setSubmitting(false);

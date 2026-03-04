@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -16,11 +17,11 @@ const SyncButton = () => {
       if (!res.ok) throw new Error('Sync failed');
       
       const data = await res.json();
-      alert(`Successfully synced ${data.count} countries!`);
+      toast.success(`Successfully synced ${data.count} countries!`);
       router.refresh();
     } catch (err) {
       console.error(err);
-      alert('Failed to sync countries. Check console for details.');
+      toast.error('Failed to sync countries.');
     } finally {
       setLoading(false);
     }
